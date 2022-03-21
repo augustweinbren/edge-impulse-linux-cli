@@ -304,7 +304,7 @@ export function makeCsv(buffer: Buffer, hmacKey: string | undefined) {
         }
     }
 
-    let columns = [];
+    let columns: string[] = [];
     for (let k of Object.keys(csvFile[0])) {
         if (k === 'timestamp') continue;
         columns.push(k);
@@ -317,7 +317,6 @@ export function makeCsv(buffer: Buffer, hmacKey: string | undefined) {
         if (hasTimestamp && !('timestamp' in line)) {
             throw new Error('File does not have a timestamp column');
         }
-
         let lineData: number[] = [];
         for (let k of columns) {
             if (!(k in line)) {
