@@ -1,5 +1,6 @@
 # Edge Impulse Linux SDK for Node.js
 
+Note: adapted from the parent fork released by Edge Impulse. 
 This library lets you run machine learning models and collect sensor data on Linux machines using Node.js. This SDK is part of [Edge Impulse](https://www.edgeimpulse.com) where we enable developers to create the next generation of intelligent device solutions with embedded machine learning. [Start here to learn more and train your first model](https://docs.edgeimpulse.com).
 
 ## Installation guide
@@ -28,11 +29,7 @@ Before you can classify data you'll first need to collect it. If you want to col
     $ edge-impulse-linux
     ```
 
-1. That's it. Your device is now connected to Edge Impulse and you can capture data from the camera and microphone.
-
-### Collecting data from other sensors
-
-To collect data from other sensors you'll need to write some code where you instantiate a `DataForwarder` object, write data samples, and finally call `finalize()` which uploads the data to Edge Impulse. [Here's an end-to-end example](https://github.com/edgeimpulse/edge-impulse-linux-cli/blob/master/examples/collect-custom.ts).
+1. That's it. Your device is now connected to Edge Impulse and you can capture data from the camera and microphone. 
 
 ### CLI Options
 
@@ -44,11 +41,16 @@ You can pass in options to the CLI. Here are the key ones:
 * `--api-key <apikey>` - set an API key, useful for automatic authentication with a new project.
 * `--help` - see all options.
 
-## Classifying data
+## Running the record-on-wakeword app
 
-To classify data (whether this is from the camera, the microphone, or a custom sensor) you'll need a model file. This model file contains all signal processing code, classical ML algorithms and neural networks - and typically contains hardware optimizations to run as fast as possible. To grab a model file:
-
-1. Train your model in Edge Impulse.
+This step requires downloading the model,
+downloading the necessary node.js libraries,
+and compiling the typescript libraries. 
+You will also need to create a directory
+Within the build directory where the voice recordings
+Recordings will be saved, and I ensure that
+The model is in the same directory as the
+Compiled typescript code. 
 1. Install the Edge Impulse CLI:
 
     ```
@@ -63,12 +65,15 @@ To classify data (whether this is from the camera, the microphone, or a custom s
 
     This downloads the file into `modelfile.eim`. (Want to switch projects? Add `--clean`)
 
-Then you can start classifying realtime sensor data. We have examples for:
+2. Install the necessary node packages from
+the head of this directory:
 
-* [Audio](https://github.com/edgeimpulse/edge-impulse-linux-cli/blob/master/examples/js/classify-audio.js) - grabs data from the microphone and classifies it in realtime.
-* [Audio (moving average filter)](https://github.com/edgeimpulse/edge-impulse-linux-cli/blob/master/examples/js/classify-audio-maf.js) - as above, but shows how to use the moving-average filter to smooth your data and reduce false positives.
-* [Camera](https://github.com/edgeimpulse/edge-impulse-linux-cli/blob/master/examples/js/classify-camera.js) - grabs data from a webcam and classifies it in realtime.
-* [Custom data](https://github.com/edgeimpulse/edge-impulse-linux-cli/blob/master/examples/js/classify-custom.js) - classifies custom sensor data.
+3. Compile the typescript files from the head of this directory:
+```
+tsc
+```
+
+4. After compilation, go to `build/examples/ts` in 
 
 ### Moving average filter
 
