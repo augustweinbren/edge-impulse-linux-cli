@@ -44,7 +44,6 @@ var recordingCount = 0;
         device = d.id;
 
         let audioClassifier = new AudioClassifier(runner, false /* verbose */);
-
         let movingAverageFilter = new MovingAverageFilter(4, model.modelParameters.labels);
 
         audioClassifier.on('noAudioError', async () => {
@@ -62,6 +61,7 @@ var recordingCount = 0;
         await audioClassifier.start(device, 250 /* interval, so here 4 times per second */);
         audioClassifier.on('result', (ev, timeMs) => {
             if (!ev.result.classification) return;
+
             let mfa = movingAverageFilter.run(ev);
 
             // print the raw predicted values for this frame
@@ -71,7 +71,8 @@ var recordingCount = 0;
 
             for (let k of Object.keys(c)) {
                 c[k] = (<number>c[k]).toFixed(4); // fixed precision
-                if (!recordingInProgress && c[k] > 0.5 && valuableWakewords.includes(k)) { // A wake word has been said
+                if (!recordingInProgress && c[k] > 0.7 && valuableWakewords.includes(k)) {
+                    // A wake word has been said and a recording is not currently in progress
                     recordingInProgress = true;
                     // Start recording audio for 10 seconds
                     var file = fs.createWriteStream('question_recordings/question_' + recordingCount + '.wav', { encoding: 'binary' });
@@ -84,7 +85,7 @@ var recordingCount = 0;
                     });
                     recording.stream().pipe(file);
 
-                    // Stop recording after ten seconds
+                    // Stop recording after fifteen seconds
                     setTimeout(function () {
                         recording.stop();
                         recordingInProgress = false;
