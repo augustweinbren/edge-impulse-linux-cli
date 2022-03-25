@@ -71,7 +71,7 @@ var recordingCount = 0;
 
             for (let k of Object.keys(c)) {
                 c[k] = (<number>c[k]).toFixed(4); // fixed precision
-                if (!recordingInProgress && c[k] > 0.7 && valuableWakewords.includes(k)) {
+                if (!recordingInProgress && c[k] > 0.6 && valuableWakewords.includes(k)) {
                     // A wake word has been said and a recording is not currently in progress
                     recordingInProgress = true;
                     // Start recording audio for 10 seconds

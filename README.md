@@ -1,6 +1,7 @@
 # Edge Impulse Linux SDK for Node.js
 
-Note: adapted from the parent fork released by Edge Impulse. 
+Note: adapted by August Weinbren from the parent fork released by Edge Impulse. 
+
 This library lets you run machine learning models and collect sensor data on Linux machines using Node.js. This SDK is part of [Edge Impulse](https://www.edgeimpulse.com) where we enable developers to create the next generation of intelligent device solutions with embedded machine learning. [Start here to learn more and train your first model](https://docs.edgeimpulse.com).
 
 ## Installation guide
@@ -56,39 +57,42 @@ Compiled typescript code.
     ```
     $ npm install edge-impulse-linux -g --unsafe-perm
     ```
+2. Navigate to the head of edge-impulse-linux-cli:
 
-1. Download the model file via:
+    ```
+    $ cd path/to/edge-impulse-linux-cli/
+    ```
+3. Download the model file via:
 
     ```
     $ edge-impulse-linux-runner --download modelfile.eim
     ```
 
     This downloads the file into `modelfile.eim`. (Want to switch projects? Add `--clean`)
-
-2. Install the necessary node packages from
+4. Install the necessary node packages from
 the head of this directory:
-
-3. Compile the typescript files from the head of this directory:
+```
+npm install
+```
+5. Compile the typescript files from the head of this directory:
 ```
 tsc
 ```
+6. Run the command with one missing argument to assess what microphone name to type in:
+```
+node build/examples/ts/record-on-wakeword.js ./modelfile.eim
+```
+7. Run the command with the correct microphone name:
+```
+node build/examples/ts/record-on-wakeword.js ./modelfile.eim <microphone name>
+```
 
-4. After compilation, go to `build/examples/ts` in 
+### No moving average record wakeword script
 
-### Moving average filter
+Note: the above version uses the moving average filter to smooth your results and reduce false positives. You may prefer to try out the version without moving average filtering
+to see which version best suits your needs.
 
-To smooth your results and reduce false positives there's an implementation of a moving-average filter in this library. To use it:
-
-```js
-const { MovingAverageFilter } = require("edge-impulse-linux");
-
-let movingAverageFilter = new MovingAverageFilter(
-    4 /* filter size, smooths over X results */,
-    model.modelParameters.labels);
-
-// classify item
-let res = await runner.classify(features);
-
-// run the filter
-let filteredRes = movingAverageFilter.run(res);
+Run steps 1-6 from above, but replace step 7 with the following:
+```
+node build/examples/ts/record-on-wakeword_no_mfa.js ./modelfile.eim <microphone name>
 ```
